@@ -1,0 +1,11 @@
+<template name="Map">
+  <div class="map">
+      <div class="map-container">
+          {{#if currentUser}}
+              {{> googleMap name="map" options=mapOptionsCurrent}}
+          {{else}}
+              {{> googleMap name="map" options=mapOptions}}
+          {{/if}}
+      </div>
+  </div>
+</template>

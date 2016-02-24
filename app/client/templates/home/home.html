@@ -2,19 +2,133 @@
     <div class="container">
         <div class="home">
           <div class="row">
-              {{> Login}}
+              <div class="login">
+                  {{#if currentUser}}
+                      <a href="#" data-logout>
+                          {{currentUser.profile.name}}
+                      </a>
+                  {{else}}
+                      {{#if loggingIn}}
+                          Logging in...
+                      {{else}}
+                          <a href="#" data-login>
+                              Login with Google
+                          </a>
+                      {{/if}}
+                  {{/if}}
+              </div>
           </div>
           <div class="row">
-              {{> Queries}}
+              <div class="queries">
+                  <ul class="queries-list">
+                      {{#if currentUser}}
+                          {{#each queries}}
+                              <table class="query">
+                                  <tr>
+                                      <td>
+                                          <button>
+                                              <i class="ion-trash-a remove">
+                                              </i>
+                                          </button>
+                                      </td>
+                                      <td>
+                                          {{query}}
+                                      </td>
+                                      <!--<td>{{lat}}</td>
+                                      <td>{{lng}}</td>-->
+                                      <td>
+                                          {{radius}}
+                                      </td>
+                                      <td>
+                                          {{time}}
+                                      </td>
+                                  </tr>
+                              </table>
+                          {{else}}
+                              <div class="query empty">
+                                  No queries yet
+                              </div>
+                          {{/each}}
+                      {{else}}
+                          <div class="query empty">
+                              No queries because you are not signed in...
+                          </div>
+                      {{/if}}
+                  </ul>
+              </div>
           </div>
           <div class="row">
-              {{> Search}}
+              <form class="search">
+                  {{#if currentUser}}
+                      <input class="search-input" type="search" name="search" placeholder="Search">
+                  {{else}}
+                      <input class="search-input" type="search" placeholder="Please Sign In..." readonly>
+                  {{/if}}
+              </form>
           </div>
           <div class="row">
-              {{> Map}}
+              <div class="map">
+                  <div class="map-container">
+                      {{#if currentUser}}
+                          {{> googleMap name="map" options=mapOptionsCurrent}}
+                      {{else}}
+                          {{> googleMap name="map" options=mapOptions}}
+                      {{/if}}
+                  </div>
+              </div>
           </div>
           <div class="row">
-              {{> Results}}
+              <div class="results">
+                  <ul class="results-list">
+                      {{#if currentUser}}
+                          <div class="row">
+                              <div class="venues">
+                                  <div class="venues-count">
+                                      {{results.results.length}} Venues
+                                  </div>
+                              </div>
+                          </div>
+                          <table class="results">
+                              <tr>
+                                  <th>Name</th>
+                                  <th>City</th>
+                                  <th>Street Address</th>
+                                  <!--<th>Latitude</th>
+                                  <th>Longitude</th>-->
+                              </tr>
+                              {{#each results.results}}
+                                  <tr>
+                                      <td>{{name}}</td>
+                                      <td>Kiev</td>
+                                      <td>{{location.address}}</td>
+                                      <!--<td>{{location.lat}}</td>
+                                      <td>{{location.lng}}</td>-->
+                                  </tr>
+
+                                  <script>
+                                      // We can use the `ready` callback to interact with the map API once the map is ready.
+                                      GoogleMaps.ready('map', function(map) {
+                                          // Add a marker to the map once it's ready
+                                          var marker = new google.maps.Marker({
+                                              position: {lat: {{location.lat}}, lng: {{location.lng}} },
+                                              map: map.instance
+                                          });
+                                      });
+                                  </script>
+
+                              {{else}}
+                                  <div class="result empty">
+                                      No results yet
+                                  </div>
+                              {{/each}}
+                          </table>
+                      {{else}}
+                          <div class="result empty">
+                              No results because you are not signed in...
+                          </div>
+                      {{/if}}
+                  </ul>
+              </div>
           </div>
         </div>
     </div>
